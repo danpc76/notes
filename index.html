@@ -1,0 +1,907 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Notes</title>
+<meta name="theme-color" content="#7cb342">
+<link rel="manifest" href="manifest.webmanifest">
+<link rel="icon" href="icons/icon-192.png">
+<link rel="apple-touch-icon" href="icons/icon-192.png">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@tabler/icons-webfont@3.19.0/dist/tabler-icons.min.css">
+<style>
+:root{--bg:#f6f5f2;--card:#fff;--tx:#1f1e1c;--tx2:#5f5e5a;--tx3:#87857e;--bd:#e4e2dc;--bd2:#cfccc4;--ac:#1d64b8;--acbg:#e6f0fb;--warn:#a86a00;--dan:#c0392b;--danbg:#fdeeec;--ok:#2e7d32;--mark:#ffe17a}
+@media (prefers-color-scheme:dark){:root{--bg:#1b1b1a;--card:#262624;--tx:#f1efe8;--tx2:#bdbbb2;--tx3:#8f8d86;--bd:#3a3936;--bd2:#4c4b47;--ac:#86b6ef;--acbg:#1f3550;--warn:#e3a94a;--dan:#f19388;--danbg:#4a2422;--ok:#82c785;--mark:#6e5c12}}
+*{box-sizing:border-box}
+html{font-size:19px}
+body{margin:0;background:var(--bg);color:var(--tx);font-family:system-ui,-apple-system,"Segoe UI",Roboto,sans-serif;-webkit-tap-highlight-color:transparent}
+button,input,textarea{font:inherit;color:inherit}
+#app{max-width:640px;margin:0 auto;padding:6px 12px 110px;min-height:100vh}
+#app.nv{display:flex;flex-direction:column;padding-bottom:0}
+.top{display:flex;align-items:center;gap:4px;min-height:46px;margin-bottom:4px}
+.top h1{font-size:1.4rem;font-weight:600;margin:0 4px;flex:1;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.ib{width:44px;height:44px;border:0;background:none;color:var(--tx2);font-size:1.6rem;display:flex;align-items:center;justify-content:center;border-radius:12px;cursor:pointer;flex:none;padding:0}
+.ib:active{background:var(--bd)}
+.ib.sm{width:38px;height:38px;font-size:1.2rem}
+.ib.on{color:var(--warn)}
+.search{display:flex;align-items:center;gap:8px;background:var(--card);border:1px solid var(--bd2);border-radius:14px;padding:0 4px 0 12px;height:48px;margin-bottom:4px;font-size:1.2rem;color:var(--tx3)}
+.search input{flex:1;border:0;outline:0;background:none;font-size:1rem;height:100%;min-width:0}
+.search input::-webkit-search-cancel-button{display:none}
+.sec{font-size:.8rem;color:var(--tx3);margin:12px 6px 2px}
+.row{display:flex;align-items:center;gap:8px;min-height:44px;padding:2px 6px;border-bottom:1px solid var(--bd);font-size:1rem;cursor:pointer}
+.row:active{background:var(--bd)}
+.row .nm{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.row .n{color:var(--tx3);font-size:.85rem;white-space:nowrap}
+.row.sel{background:var(--acbg);color:var(--ac);border-radius:10px}
+.row.acc{color:var(--ac);border-bottom:0}
+.row.sm{min-height:40px;font-size:.95rem}
+.ic{font-size:1.35rem;color:var(--tx2);flex:none}
+.acc .ic,.sel .ic{color:inherit}
+.tg{width:28px;height:38px;border:0;background:none;display:flex;align-items:center;justify-content:center;font-size:1.2rem;color:var(--tx3);flex:none;padding:0;margin-right:-6px}
+.card{background:var(--card);border:1px solid var(--bd);border-radius:12px;padding:8px 12px 8px 14px;margin-bottom:6px;cursor:pointer}
+.card.pin{border-color:var(--warn)}
+.card .ch{display:flex;gap:8px;align-items:flex-start}
+.card h4{margin:0;font-size:1.05rem;font-weight:600;flex:1;line-height:1.3}
+.card p{margin:2px 0 0;color:var(--tx2);font-size:.95rem;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;word-break:break-word}
+.pinic{color:var(--warn);font-size:1.2rem}
+.meta{display:flex;flex-wrap:wrap;gap:2px 12px;align-items:center;font-size:.8rem;color:var(--tx3);margin-top:4px}
+.path{color:var(--ac)}
+.rem{color:var(--tx2)}
+.dan{color:var(--dan)}
+.mut{color:var(--tx3);font-weight:400}
+mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 1px}
+.empty{color:var(--tx3);text-align:center;padding:28px 10px;line-height:1.5}
+.crumb{font-size:.85rem;color:var(--ac);margin:-4px 8px 4px}
+.fab{position:fixed;right:18px;bottom:22px;width:66px;height:66px;border-radius:50%;border:0;background:var(--ac);color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.25);cursor:pointer;z-index:10}
+.catsel{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;padding:6px 12px;border-radius:14px;border:1px solid var(--ac);background:var(--acbg);color:var(--ac);font-size:1rem;text-align:left;cursor:pointer}
+.catsel span{flex:1;min-width:0}
+.tin{width:100%;border:0;outline:0;background:none;font-size:1.35rem;font-weight:600;padding:10px 4px 2px}
+.txa{width:100%;border:0;outline:0;background:none;font-size:1.05rem;line-height:1.55;padding:4px 4px;resize:none;min-height:2.2em;overflow:hidden;display:block}
+.tin::placeholder,.txa::placeholder{color:var(--tx3)}
+.item{display:flex;align-items:flex-start;gap:2px;border-bottom:1px solid var(--bd)}
+.item .itx{flex:1;border:0;outline:0;background:none;font-size:1.05rem;line-height:1.35;padding:11px 0 9px;min-width:0;resize:none;overflow:hidden;display:block}
+.item.ok .itx{text-decoration:line-through;color:var(--tx3)}
+.ck{width:42px;height:44px;border:0;background:none;font-size:1.5rem;color:var(--tx2);padding:0;flex:none}
+.item.ok .ck{color:var(--ok)}
+.phs{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+.phs:empty{margin:0}
+.pt{width:96px;height:96px;border-radius:10px;background:var(--card);border:1px solid var(--bd);display:flex;align-items:center;justify-content:center;color:var(--tx3);font-size:1.6rem;overflow:hidden;cursor:pointer}
+.pt img{width:100%;height:100%;object-fit:cover}
+.remrow{display:flex;align-items:center;gap:12px;border:1px solid var(--bd2);border-radius:14px;padding:6px 6px 6px 14px;margin:10px 0;font-size:1rem;cursor:pointer}
+.remrow>i{font-size:1.4rem;color:var(--dan)}
+.remrow>div{flex:1}
+.remrow .sub{font-size:.9rem;color:var(--tx2)}
+.remrow.past{border-color:var(--dan);background:var(--danbg)}
+.st{font-size:.8rem;color:var(--tx3);display:flex;align-items:center;gap:4px}
+.st.ok{color:var(--ok)}.st.err{color:var(--dan)}
+.tbar{position:sticky;bottom:0;margin:auto -12px 0;background:var(--card);border-top:1px solid var(--bd);padding:0 0 calc(4px + env(safe-area-inset-bottom));z-index:10}
+.tbar .tools{display:flex;justify-content:space-around;padding-top:4px;max-width:640px;margin:0 auto}
+.tbar .ib{font-size:1.75rem;width:64px;height:50px}
+.shr{display:flex;align-items:center;gap:4px;border-bottom:1px solid var(--bd);padding:2px 10px;max-width:640px;margin:0 auto}
+.shr .lb{flex:1;font-size:.9rem;color:var(--tx2);display:flex;align-items:center;gap:6px}
+.shr .ib{font-size:1.6rem;width:52px;height:44px}
+.wa{color:#1d9e75!important}.ml{color:var(--ac)!important}
+.sw{display:flex;flex-wrap:wrap;gap:14px;padding:4px 4px 8px}
+.sw button{width:44px;height:44px;border-radius:50%;border:0;cursor:pointer;padding:0}
+.sw button.on{outline:3px solid var(--tx);outline-offset:3px}
+.fv{position:relative;width:34px;height:34px;border-radius:9px;display:flex;align-items:center;justify-content:center;font-weight:600;font-size:.95rem;flex:none;overflow:hidden}
+.fv img{position:absolute;inset:0;width:100%;height:100%;object-fit:contain;padding:5px;background:var(--card)}
+a.row{color:inherit;text-decoration:none}
+.chp{display:flex;gap:6px;margin:6px 2px}
+.chp button{height:36px;padding:0 14px;border-radius:18px;border:1px solid var(--bd2);background:var(--card);font-size:.9rem;cursor:pointer}
+.chp button.on{background:var(--acbg);color:var(--ac);border-color:var(--ac)}
+.kp{display:grid;grid-template-columns:repeat(3,1fr);gap:6px;margin:6px 0}
+.kp div{background:var(--card);border:1px solid var(--bd);border-radius:10px;padding:6px 10px;font-size:.78rem;color:var(--tx3)}
+.kp b{display:block;font-size:1.3rem;color:var(--tx)}
+.bar{padding:5px 6px;cursor:pointer;border-radius:8px}
+.bar:active{background:var(--bd)}
+.bar .l{display:flex;justify-content:space-between;gap:8px;font-size:.95rem}
+.bar .l span:last-child{color:var(--tx3);font-size:.82rem;white-space:nowrap}
+.bar .b{height:7px;border-radius:4px;background:var(--bd);margin-top:3px}
+.bar .b i{display:block;height:100%;border-radius:4px}
+.card.selc{border-color:var(--ac);background:var(--acbg)}
+.card .ckb{font-size:1.4rem;color:var(--tx3);margin:-2px 0 0 -2px}
+.card.selc .ckb{color:var(--ac)}
+.selbar{position:fixed;left:0;right:0;bottom:0;background:var(--card);border-top:1px solid var(--bd);z-index:20;padding:4px 8px calc(4px + env(safe-area-inset-bottom))}
+.selbar>div{display:flex;align-items:center;gap:2px;max-width:640px;margin:0 auto}
+.selbar .lb{flex:1;font-size:1rem;font-weight:600;padding-left:4px}
+.selbar .ib{font-size:1.6rem}
+.icom{display:block;width:calc(100% - 42px);margin:-4px 0 6px 42px;border:0;border-left:3px solid var(--bd2);outline:0;background:none;resize:none;overflow:hidden;font-size:.95rem;line-height:1.4;color:var(--tx2);padding:3px 8px;min-height:1.9em}
+.icom:focus{background:var(--card);border-radius:0}
+.addc{margin:-8px 0 4px 42px;font-size:.82rem;color:var(--ac);background:none;border:0;padding:4px 0;display:inline-flex;align-items:center;gap:4px;cursor:pointer}
+.words{display:flex;flex-wrap:wrap;gap:6px;padding:2px 4px}
+.words span{background:var(--card);border:1px solid var(--bd);border-radius:14px;padding:3px 10px;font-size:.85rem}
+.ov{position:fixed;inset:0;background:rgba(0,0,0,.45);display:flex;align-items:flex-end;justify-content:center;z-index:50}
+.sh{background:var(--card);width:100%;max-width:640px;border-radius:20px 20px 0 0;padding:18px 16px calc(18px + env(safe-area-inset-bottom));max-height:88vh;overflow:auto}
+.sh h3{margin:0 4px 12px;font-size:1.2rem;font-weight:600}
+.sh p{margin:0 4px 12px;line-height:1.5;color:var(--tx2)}
+.inp{width:100%;height:54px;border:1px solid var(--bd2);border-radius:12px;background:var(--bg);padding:0 12px;font-size:1.05rem;outline:0}
+.inp:focus{border-color:var(--ac)}
+.lbl{display:block;font-size:.85rem;color:var(--tx3);margin:14px 4px 6px}
+.chips{display:flex;flex-wrap:wrap;gap:8px}
+.acts{display:flex;gap:8px;margin-top:16px;align-items:center}
+.btn{height:52px;padding:0 18px;border-radius:12px;border:1px solid var(--bd2);background:var(--card);font-size:1rem;cursor:pointer;display:inline-flex;align-items:center;gap:8px}
+.btn.pri{background:var(--ac);color:#fff;border-color:var(--ac)}
+.btn.dan{color:var(--dan);border-color:var(--dan)}
+.btn.wide{width:100%;justify-content:flex-start;margin-bottom:8px}
+.hint{font-size:.85rem!important;color:var(--tx3)!important;margin-top:12px!important}
+.photo-big{width:100%;max-height:70vh;object-fit:contain;border-radius:10px;background:#000}
+#toast{position:fixed;left:50%;bottom:96px;transform:translateX(-50%);background:#2b2a28;color:#fff;padding:12px 18px;border-radius:12px;font-size:.95rem;max-width:90vw;z-index:80;opacity:0;pointer-events:none;transition:opacity .2s;text-align:center}
+#toast.on{opacity:1}
+.load{display:flex;align-items:center;justify-content:center;gap:10px;color:var(--tx3);padding:60px 0}
+.spin{animation:sp 1s linear infinite;display:inline-block}
+@keyframes sp{to{transform:rotate(360deg)}}
+</style>
+</head>
+<body>
+<div id="app"></div>
+<div id="toast"></div>
+<script>
+const $ = s => document.querySelector(s);
+const S = { sel: null, cats: [], notes: [], links: [], lnkEdit: false, statsCat: null, statsDays: 90, url: '', view: { v: 'home' }, stack: [], q: '', open: {}, photo: {}, edit: null, lastCat: null, uploading: 0 };
+try { S.open = JSON.parse(localStorage.getItem('bn_open') || '{}'); S.lastCat = localStorage.getItem('bn_last') || null; } catch (e) {}
+function remember() { try { localStorage.setItem('bn_open', JSON.stringify(S.open)); if (S.lastCat) localStorage.setItem('bn_last', S.lastCat); } catch (e) {} }
+
+// ── servidor ──
+const CFG = { url: '', key: '' };
+try { CFG.url = localStorage.getItem('nt_url') || ''; CFG.key = localStorage.getItem('nt_key') || ''; } catch (e) {}
+async function api(fn, ...args) {
+  if (window.__mockApi) return window.__mockApi(fn, args);
+  if (!CFG.url || !CFG.key) throw new Error('Falta configurar la conexión');
+  let r, d;
+  try {
+    r = await fetch(CFG.url, { method: 'POST', headers: { 'Content-Type': 'text/plain;charset=utf-8' }, body: JSON.stringify({ key: CFG.key, fn, args }) });
+  } catch (e) { throw new Error('Sin conexión'); }
+  try { d = await r.json(); } catch (e) { throw new Error('Respuesta no válida del servidor (' + r.status + ')'); }
+  if (!d.ok) throw new Error(d.error || 'Error del servidor');
+  return d.data;
+}
+// Copia local de los datos para abrir rápido y ver las notas sin señal.
+let cacheT = null;
+function cacheLater() {
+  clearTimeout(cacheT);
+  cacheT = setTimeout(() => { try { localStorage.setItem('nt_cache', JSON.stringify({ cats: S.cats, notes: S.notes, links: S.links, at: Date.now() })); } catch (e) {} }, 800);
+}
+function errMsg(e) { return (e && e.message ? e.message : String(e)).replace(/^(Exception|Error):\s{0,9}/, ''); }
+
+// ── utilidades ──
+function esc(s) { return String(s == null ? '' : s).replace(/[&<>"']/g, c => ({ '&': '&amp;', '<': '&lt;', '>': '&gt;', '"': '&quot;', "'": '&#39;' }[c])); }
+function uid() { return Date.now().toString(36) + Math.random().toString(36).slice(2, 7); }
+const normC = c => c.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase();
+const norm = s => normC(String(s || ''));
+function toast(m, ms) { const t = $('#toast'); t.textContent = m; t.classList.add('on'); clearTimeout(toast.t); toast.t = setTimeout(() => t.classList.remove('on'), ms || 2600); }
+
+const MES = ['ene', 'feb', 'mar', 'abr', 'may', 'jun', 'jul', 'ago', 'sep', 'oct', 'nov', 'dic'];
+const DIA = ['dom', 'lun', 'mar', 'mié', 'jue', 'vie', 'sáb'];
+const p2 = x => String(x).padStart(2, '0');
+const hm = d => p2(d.getHours()) + ':' + p2(d.getMinutes());
+const dayDiff = (a, b) => Math.round((new Date(a.getFullYear(), a.getMonth(), a.getDate()) - new Date(b.getFullYear(), b.getMonth(), b.getDate())) / 864e5);
+function fmtDate(iso) {
+  if (!iso) return '';
+  const d = new Date(iso), n = new Date(), k = dayDiff(n, d);
+  if (k === 0) return 'Hoy ' + hm(d);
+  if (k === 1) return 'Ayer ' + hm(d);
+  return d.getDate() + ' ' + MES[d.getMonth()] + (d.getFullYear() !== n.getFullYear() ? ' ' + d.getFullYear() : '');
+}
+function fmtRem(iso) {
+  const d = new Date(iso), k = dayDiff(d, new Date());
+  const s = k === 0 ? 'Hoy' : k === 1 ? 'Mañana' : k === -1 ? 'Ayer' : DIA[d.getDay()] + ' ' + d.getDate() + ' ' + MES[d.getMonth()];
+  return s + ' · ' + hm(d);
+}
+
+// ── categorías ──
+const cat = id => S.cats.find(c => c.id === id);
+const kids = pid => S.cats.filter(c => (c.parent || null) === (pid || null)).sort((a, b) => a.name.localeCompare(b.name, 'es'));
+function path(id) { const p = []; let c = cat(id), g = 0; while (c && g++ < 30) { p.unshift(c.name); c = cat(c.parent); } return p.join(' › ') || 'Sin categoría'; }
+function desc(id) { const out = [id]; kids(id).forEach(k => out.push(...desc(k.id))); return out; }
+function countDeep(id) { const ids = desc(id); return S.notes.filter(n => ids.includes(n.cat)).length; }
+const COLORS = ['#378add', '#1d9e75', '#639922', '#ba7517', '#d85a30', '#e24b4a', '#7f77dd', '#d4537e', '#888780'];
+function catColor(id) { let c = cat(id), g = 0; while (c && g++ < 30) { if (c.color) return c.color; c = cat(c.parent); } return ''; }
+const fic = id => { const k = catColor(id); return `<i class="ti ti-folder ic"${k ? ` style="color:${k}"` : ''}></i>`; };
+const sortNotes = a => a.slice().sort((x, y) => (y.pinned - x.pinned) || String(y.updated).localeCompare(String(x.updated)));
+
+// ── búsqueda ──
+const terms = q => norm(q).split(/\s+/).filter(Boolean);
+const noteText = n => [n.title, n.text, (n.items || []).map(i => i.t + (i.c ? '\n' + i.c : '')).join('\n')].join('\n');
+function matches(n, ts) { const h = norm(noteText(n) + '\n' + path(n.cat) + '\n' + noteText(n).split('\n').map(l => (parseTag(l) || {}).tag || '').join(' ')); return ts.every(t => h.includes(t)); }
+function hl(text, ts) {
+  text = String(text || '');
+  if (!ts || !ts.length) return esc(text);
+  let nm = ''; const map = [];
+  for (let i = 0; i < text.length; i++) { const c = normC(text[i]); for (let k = 0; k < c.length; k++) { nm += c[k]; map.push(i); } }
+  const mk = new Array(text.length).fill(false);
+  ts.forEach(t => { let p = nm.indexOf(t); while (p >= 0) { for (let k = p; k < p + t.length; k++) mk[map[k]] = true; p = nm.indexOf(t, p + t.length); } });
+  let out = '', on = false;
+  for (let i = 0; i < text.length; i++) {
+    if (mk[i] && !on) { out += '<mark>'; on = true; }
+    if (!mk[i] && on) { out += '</mark>'; on = false; }
+    out += esc(text[i]);
+  }
+  return out + (on ? '</mark>' : '');
+}
+function snippet(n, ts) {
+  const body = [n.text, (n.items || []).map(i => (i.ok ? '✓ ' : '• ') + i.t).join('  ')].filter(Boolean).join('  ').replace(/\s+/g, ' ').trim();
+  if (!ts || !ts.length) return body.slice(0, 160);
+  const nb = norm(body); let p = -1;
+  for (const t of ts) { p = nb.indexOf(t); if (p >= 0) break; }
+  if (p < 0) return body.slice(0, 160);
+  const s = Math.max(0, p - 40);
+  return (s > 0 ? '…' : '') + body.slice(s, s + 160);
+}
+
+// ── navegación ──
+function go(v) { S.sel = null; S.stack.push(S.view); S.view = v; try { history.pushState({ d: S.stack.length }, ''); } catch (e) {} render(); window.scrollTo(0, 0); }
+function back() { if (S.sel) { S.sel = null; return render(); } if (S.view.v === 'note') leaveNote(); S.view = S.stack.pop() || { v: 'home' }; render(); }
+function render() {
+  const v = S.view.v;
+  if (v !== 'setup' && S.cats.length) cacheLater();
+  $('#app').classList.toggle('nv', v === 'note');
+  $('#app').innerHTML = v === 'cat' ? vCat() : v === 'note' ? vNote() : v === 'rem' ? vRem() : v === 'all' ? vAll() : v === 'links' ? vLinks() : v === 'stats' ? vStats() : v === 'setup' ? vSetup() : vHome();
+  if (v === 'note') { grow($('#tx')); document.querySelectorAll('#items .icom, #items .itx').forEach(grow); status(); }
+  if (S.sel && v !== 'note') { $('#app').insertAdjacentHTML('beforeend', selBar()); document.querySelectorAll('#app .fab').forEach(f => f.remove()); }
+}
+
+// ── tarjetas ──
+function card(n, o) {
+  o = o || {};
+  const ts = o.ts || [], ph = (n.photos || []).length, r = n.reminder, past = r && new Date(r) < new Date(), s = snippet(n, ts);
+  const k = catColor(n.cat);
+  const sel = S.sel && S.sel.has(n.id);
+  return `<div class="card${n.pinned ? ' pin' : ''}${sel ? ' selc' : ''}"${k ? ` style="box-shadow:inset 4px 0 0 ${k}"` : ''} onclick="cardTap('${n.id}')" oncontextmenu="event.preventDefault();selStart('${n.id}')">
+    <div class="ch">${S.sel ? `<i class="ti ti-${sel ? 'square-check' : 'square'} ckb"></i>` : ''}<h4>${n.title ? hl(n.title, ts) : '<span class="mut">Sin título</span>'}</h4>${n.pinned ? '<i class="ti ti-pin pinic"></i>' : ''}</div>
+    ${s ? `<p>${hl(s, ts)}</p>` : ''}
+    <div class="meta"><span>${fmtDate(n.updated)}</span>
+      ${r ? `<span class="${past ? 'dan' : 'rem'}"><i class="ti ti-bell"></i> ${fmtRem(r)}</span>` : ''}
+      ${ph ? `<span><i class="ti ti-photo"></i> ${ph}</span>` : ''}
+      ${o.path ? `<span class="path">${esc(path(n.cat))}</span>` : ''}</div></div>`;
+}
+
+// ── inicio ──
+function vHome() {
+  return `<div class="top"><h1>Notes</h1><button class="ib" onclick="reload()" aria-label="Actualizar"><i class="ti ti-refresh"></i></button><button class="ib" onclick="settings()" aria-label="Ajustes"><i class="ti ti-settings"></i></button></div>
+  <div class="search"><i class="ti ti-search"></i><input id="q" type="search" placeholder="Buscar en todas las notas" value="${esc(S.q)}" oninput="onQ(this.value)" autocomplete="off">
+  <button class="ib sm" id="qx" onclick="clearQ()" style="${S.q ? '' : 'display:none'}" aria-label="Borrar búsqueda"><i class="ti ti-x"></i></button></div>
+  <div id="hb">${homeBody()}</div>
+  <button class="fab" onclick="newNote()" aria-label="Nueva nota"><i class="ti ti-plus"></i></button>`;
+}
+function onQ(v) { S.q = v; $('#hb').innerHTML = homeBody(); $('#qx').style.display = v ? '' : 'none'; }
+function clearQ() { S.q = ''; render(); }
+function homeBody() {
+  const ts = terms(S.q);
+  if (ts.length) {
+    const r = sortNotes(S.notes.filter(n => matches(n, ts))), nc = new Set(r.map(n => n.cat)).size;
+    return `<div class="sec">${r.length} resultado${r.length === 1 ? '' : 's'}${r.length ? ` en ${nc} categoría${nc === 1 ? '' : 's'}` : ''}</div>` +
+      (r.map(n => card(n, { ts, path: true })).join('') || '<div class="empty">No hay notas con ese texto.</div>');
+  }
+  const pins = sortNotes(S.notes.filter(n => n.pinned));
+  const upN = S.notes.filter(n => n.reminder && new Date(n.reminder) >= new Date()).length;
+  return (pins.length ? '<div class="sec">Fijadas</div>' + pins.map(n => card(n, { path: true })).join('') : '') +
+    `<div class="sec">Ver</div>
+    <div class="row" onclick="go({v:'rem'})"><i class="ti ti-bell ic dan"></i><span class="nm">Recordatorios</span><span class="n">${upN} próximo${upN === 1 ? '' : 's'}</span></div>
+    <div class="row" onclick="go({v:'links'})"><i class="ti ti-link ic" style="color:#378add"></i><span class="nm">Enlaces</span><span class="n">${S.links.length}</span></div>
+    <div class="row" onclick="openStats()"><i class="ti ti-chart-bar ic" style="color:#1d9e75"></i><span class="nm">Estadísticas</span><span class="n">por TAG</span></div>
+    <div class="row" onclick="go({v:'all'})"><i class="ti ti-notes ic"></i><span class="nm">Todas las notas</span><span class="n">${S.notes.length}</span></div>
+    <div class="sec">Categorías</div>${tree(null, 0)}
+    <div class="row acc" onclick="newCat(null)"><i class="ti ti-folder-plus ic"></i><span class="nm">Nueva categoría</span></div>`;
+}
+function tree(pid, l) {
+  return kids(pid).map(c => {
+    const k = kids(c.id).length, op = S.open[c.id];
+    return `<div class="row" style="padding-left:${4 + l * 20}px" onclick="go({v:'cat',id:'${c.id}'})">
+      ${k ? `<button class="tg" onclick="event.stopPropagation();toggle('${c.id}')" aria-label="Expandir"><i class="ti ti-chevron-${op ? 'down' : 'right'}"></i></button>` : '<span class="tg"></span>'}
+      ${fic(c.id)}<span class="nm">${esc(c.name)}</span><span class="n">${countDeep(c.id)}</span></div>${k && op ? tree(c.id, l + 1) : ''}`;
+  }).join('');
+}
+function toggle(id) { S.open[id] = !S.open[id]; remember(); $('#hb').innerHTML = homeBody(); }
+function reload() {
+  flush();
+  api('getData').then(d => { applyData(d); render(); toast('Actualizado'); }).catch(e => toast('No se pudo actualizar: ' + errMsg(e)));
+}
+
+// ── categoría ──
+function vCat() {
+  const c = cat(S.view.id);
+  if (!c) { S.view = { v: 'home' }; return vHome(); }
+  const subs = kids(c.id), ns = sortNotes(S.notes.filter(n => n.cat === c.id));
+  return `<div class="top"><button class="ib" onclick="history.back()" aria-label="Volver"><i class="ti ti-arrow-left"></i></button><h1>${catColor(c.id) ? `<i class="ti ti-folder" style="color:${catColor(c.id)}"></i> ` : ''}${esc(c.name)}</h1>
+    <button class="ib" onclick="catMenu('${c.id}')" aria-label="Opciones"><i class="ti ti-dots-vertical"></i></button></div>
+    ${c.parent ? `<div class="crumb">${esc(path(c.parent))}</div>` : ''}
+    ${subs.length ? '<div class="sec">Subcategorías</div>' + subs.map(s => `<div class="row" onclick="go({v:'cat',id:'${s.id}'})">${fic(s.id)}<span class="nm">${esc(s.name)}</span><span class="n">${countDeep(s.id)}</span></div>`).join('') : ''}
+    <div class="sec">Notas</div>${ns.map(n => card(n)).join('') || '<div class="empty">Sin notas aquí todavía.<br>Toca + para crear una.</div>'}
+    <button class="fab" onclick="newNote('${c.id}')" aria-label="Nueva nota"><i class="ti ti-plus"></i></button>`;
+}
+function catMenu(id) {
+  const c = cat(id);
+  sheet(`<h3>${esc(c.name)}</h3>
+    <button class="btn wide" onclick="closeSheet();newCat('${id}')"><i class="ti ti-folder-plus"></i>Nueva subcategoría</button>
+    <button class="btn wide" onclick="closeSheet();renCat('${id}')"><i class="ti ti-edit"></i>Renombrar</button>
+    <button class="btn wide" onclick="colorSheet('${id}')"><i class="ti ti-palette"></i>Color</button>
+    <button class="btn wide" onclick="closeSheet();openStats('${id}')"><i class="ti ti-chart-bar"></i>Estadísticas</button>
+    <button class="btn wide" onclick="closeSheet();selStart()"><i class="ti ti-checkbox"></i>Seleccionar notas</button>
+    <button class="btn wide dan" onclick="closeSheet();delCat('${id}')"><i class="ti ti-trash"></i>Borrar categoría</button>`);
+}
+async function createCatFlow(pid) {
+  const name = await ask(pid ? 'Nueva subcategoría en ' + path(pid) : 'Nueva categoría', '', 'Crear');
+  if (!name) return null;
+  try {
+    const c = await api('createCat', name, pid || null);
+    S.cats.push(c);
+    if (pid) { S.open[pid] = true; remember(); }
+    toast('Categoría creada');
+    return c;
+  } catch (e) { toast(errMsg(e), 3500); return null; }
+}
+async function newCat(pid) { const c = await createCatFlow(pid); if (c) render(); }
+async function renCat(id) {
+  const name = await ask('Renombrar categoría', cat(id).name, 'Guardar');
+  if (!name) return;
+  try { const c = await api('renameCat', id, name); cat(id).name = c.name; render(); } catch (e) { toast(errMsg(e), 3500); }
+}
+async function delCat(id) {
+  if (kids(id).length) return toast('Primero borra o mueve sus subcategorías', 3500);
+  if (S.notes.some(n => n.cat === id)) return toast('Primero mueve o borra sus notas', 3500);
+  if (!(await confirmar('¿Borrar "' + cat(id).name + '"?', 'La categoría está vacía.', 'Borrar'))) return;
+  try { await api('deleteCat', id); S.cats = S.cats.filter(c => c.id !== id); history.back(); } catch (e) { toast(errMsg(e), 3500); }
+}
+
+function colorSheet(id) {
+  const c = cat(id), cur = c.color || '';
+  sheet(`<h3>Color de "${esc(c.name)}"</h3><div class="sw">${COLORS.map(k => `<button class="${k === cur ? 'on' : ''}" style="background:${k}" onclick="setColor('${id}','${k}')" aria-label="Color"></button>`).join('')}</div>
+    <div class="acts">${cur ? `<button class="btn" onclick="setColor('${id}','')"><i class="ti ti-droplet-off"></i>Quitar color</button>` : ''}<span style="flex:1"></span><button class="btn" onclick="closeSheet()">Cerrar</button></div>
+    <p class="hint">Las subcategorías sin color propio usan el de su categoría superior.</p>`);
+}
+async function setColor(id, k) {
+  closeSheet();
+  const c = cat(id), prev = c.color;
+  if (k) c.color = k; else delete c.color;
+  render();
+  try { await api('setCatColor', id, k); } catch (e) { if (prev) c.color = prev; else delete c.color; render(); toast('No se pudo guardar el color: ' + errMsg(e), 3500); }
+}
+
+// ── listas ──
+function vRem() {
+  const now = new Date(), r = S.notes.filter(n => n.reminder).sort((a, b) => a.reminder.localeCompare(b.reminder));
+  const up = r.filter(n => new Date(n.reminder) >= now), past = r.filter(n => new Date(n.reminder) < now).reverse();
+  return `<div class="top"><button class="ib" onclick="history.back()" aria-label="Volver"><i class="ti ti-arrow-left"></i></button><h1>Recordatorios</h1></div>
+    <div class="sec">Próximos</div>${up.map(n => card(n, { path: true })).join('') || '<div class="empty">No tienes recordatorios próximos.</div>'}
+    ${past.length ? '<div class="sec">Vencidos</div>' + past.map(n => card(n, { path: true })).join('') : ''}`;
+}
+function vAll() {
+  return `<div class="top"><button class="ib" onclick="history.back()" aria-label="Volver"><i class="ti ti-arrow-left"></i></button><h1>Todas las notas</h1></div>
+    ${sortNotes(S.notes).map(n => card(n, { path: true })).join('') || '<div class="empty">Aún no tienes notas.</div>'}
+    <button class="fab" onclick="newNote()" aria-label="Nueva nota"><i class="ti ti-plus"></i></button>`;
+}
+
+// ── enlaces ──
+const hashC = t => COLORS[[...String(t)].reduce((a, c) => (a * 31 + c.charCodeAt(0)) >>> 0, 7) % COLORS.length];
+function host(u) { try { return new URL(u).hostname; } catch (e) { return ''; } }
+function favicon(l) {
+  const k = hashC(l.name), h = host(l.url);
+  return `<span class="fv" style="background:${k}22;color:${k}">${esc((l.name || '?')[0].toUpperCase())}${h ? `<img src="https:\/\/www.google.com/s2/favicons?domain=${encodeURIComponent(h)}&sz=64" alt="" onerror="this.remove()">` : ''}</span>`;
+}
+function vLinks() {
+  const groups = {};
+  S.links.forEach(l => (groups[l.group || 'General'] = groups[l.group || 'General'] || []).push(l));
+  const names = Object.keys(groups).sort((a, b) => a.localeCompare(b, 'es'));
+  const row = l => S.lnkEdit
+    ? `<div class="row" onclick="linkSheet('${l.id}')">${favicon(l)}<span class="nm">${esc(l.name)}</span><i class="ti ti-pencil ic"></i></div>`
+    : `<a class="row" href="${esc(l.url)}" target="_blank" rel="noopener">${favicon(l)}<span class="nm">${esc(l.name)}</span><i class="ti ti-external-link n"></i></a>`;
+  return `<div class="top"><button class="ib" onclick="history.back()" aria-label="Volver"><i class="ti ti-arrow-left"></i></button><h1>Enlaces</h1>
+    <button class="ib${S.lnkEdit ? ' on' : ''}" onclick="S.lnkEdit=!S.lnkEdit;render()" aria-label="Editar enlaces"><i class="ti ti-${S.lnkEdit ? 'check' : 'pencil'}"></i></button></div>
+    ${S.lnkEdit ? '<div class="crumb">Toca un enlace para editarlo</div>' : ''}
+    ${names.map(g => `<div class="sec">${esc(g)}</div>` + groups[g].sort((a, b) => a.name.localeCompare(b.name, 'es')).map(row).join('')).join('') || '<div class="empty">Guarda aquí las páginas que abres seguido.</div>'}
+    <div class="row acc" onclick="linkSheet(null)"><i class="ti ti-plus ic"></i><span class="nm">Agregar enlace</span></div>`;
+}
+function linkSheet(id) {
+  const l = S.links.find(x => x.id === id) || { name: '', url: '', group: '' };
+  const groups = [...new Set(S.links.map(x => x.group).filter(Boolean))].sort();
+  sheet(`<h3>${id ? 'Editar enlace' : 'Nuevo enlace'}</h3>
+    <label class="lbl" for="ln">Nombre</label><input id="ln" class="inp" maxlength="60" value="${esc(l.name)}" placeholder="PI Vision">
+    <label class="lbl" for="lu">Dirección</label><input id="lu" class="inp" type="url" inputmode="url" autocomplete="off" value="${esc(l.url)}" placeholder="https:\/\/…">
+    <label class="lbl" for="lg">Grupo</label><input id="lg" class="inp" maxlength="40" list="lgs" value="${esc(l.group)}" placeholder="Trabajo">
+    <datalist id="lgs">${groups.map(g => `<option value="${esc(g)}">`).join('')}</datalist>
+    <div class="acts">${id ? `<button class="btn dan" onclick="linkDel('${id}')"><i class="ti ti-trash"></i>Borrar</button>` : ''}<span style="flex:1"></span>
+      <button class="btn" onclick="closeSheet()">Cancelar</button><button class="btn pri" onclick="linkOk(${id ? `'${id}'` : 'null'})">Guardar</button></div>`);
+  setTimeout(() => { const i = $(id ? '#lu' : '#ln'); if (i) i.focus(); }, 60);
+}
+async function linkOk(id) {
+  const x = { id: id || uid(), name: $('#ln').value.trim(), url: $('#lu').value.trim(), group: $('#lg').value.trim() };
+  if (!x.name) return toast('Escribe un nombre');
+  if (!x.url) return toast('Escribe la dirección');
+  closeSheet();
+  try { const l = await api('saveLink', x); const i = S.links.findIndex(k => k.id === l.id); if (i >= 0) S.links[i] = l; else S.links.push(l); render(); toast('Enlace guardado'); }
+  catch (e) { toast(errMsg(e), 3500); }
+}
+async function linkDel(id) {
+  closeSheet();
+  if (!(await confirmar('¿Borrar este enlace?', S.links.find(x => x.id === id).name, 'Borrar'))) return;
+  try { await api('deleteLink', id); S.links = S.links.filter(x => x.id !== id); render(); } catch (e) { toast(errMsg(e), 3500); }
+}
+
+// ── estadísticas ──
+const TAG_RE = /^\s*(\d{2,4})[\s-]?([A-Za-z]{1,5})[\s-]?(\d{2,5}[A-Za-z]?)(?![A-Za-z0-9])\s*[:\-–.]?\s*(.*)$/;
+const VARS = { A: 'Análisis', C: 'Conductividad', D: 'Densidad', E: 'Voltaje', F: 'Flujo', H: 'Manual', I: 'Corriente', J: 'Potencia', K: 'Tiempo', L: 'Nivel', M: 'Humedad', N: 'Consistencia', P: 'Presión', Q: 'Cantidad', S: 'Velocidad', T: 'Temperatura', V: 'Vibración', W: 'Peso', X: 'Otro', Y: 'Evento', Z: 'Posición' };
+const STOP = new Set('para con del los las por que una uno unos unas este esta esto como pero cuando donde entre sobre segun hacia desde hasta tras sin ante bajo cada todo toda todos todas otro otra muy mas ya hay fue ser esta estan tiene'.split(' '));
+function parseTag(line) {
+  const m = TAG_RE.exec(String(line || ''));
+  if (!m) return null;
+  const tipo = m[2].toUpperCase();
+  return { tag: m[1] + tipo + m[3].toUpperCase(), area: m[1], tipo, variable: (VARS[tipo[0]] || 'Otro') + ' (' + tipo[0] + ')', accion: m[4].trim() };
+}
+function defStatsCat() {
+  if (S.statsCat && cat(S.statsCat)) return S.statsCat;
+  const nat = S.cats.find(c => norm(c.name) === 'nat');
+  return (nat || kids(null)[0] || {}).id;
+}
+function openStats(id) { S.statsCat = id || defStatsCat(); go({ v: 'stats' }); }
+function statsData() {
+  const ids = desc(S.statsCat), from = S.statsDays ? Date.now() - S.statsDays * 864e5 : 0;
+  const ns = S.notes.filter(n => ids.includes(n.cat) && new Date(n.created).getTime() >= from);
+  const E = [];
+  ns.forEach(n => {
+    (n.items || []).forEach(i => { const t = parseTag(i.t); if (t) E.push(Object.assign(t, { ok: !!i.ok, item: true, n })); });
+    String(n.text || '').split('\n').forEach(l => { const t = parseTag(l); if (t) E.push(Object.assign(t, { ok: false, item: false, n })); });
+  });
+  const count = (key, f) => { const m = new Map(); E.forEach(e => { const k = e[key]; if (!k) return; const o = m.get(k) || { k, c: 0, p: 0, last: '' }; o.c++; if (e.item && !e.ok) o.p++; if (e.n.created > o.last) o.last = e.n.created; m.set(k, o); }); return [...m.values()].sort((a, b) => b.c - a.c || a.k.localeCompare(b.k)); };
+  const words = new Map();
+  E.forEach(e => norm(e.accion).split(/[^a-zñ]+/).forEach(w => { if (w.length >= 4 && !STOP.has(w)) words.set(w, (words.get(w) || 0) + 1); }));
+  return { notes: ns.length, E, pend: E.filter(e => e.item && !e.ok).length, tags: count('tag'), tipos: count('tipo'), vars: count('variable'), areas: count('area'),
+    words: [...words.entries()].sort((a, b) => b[1] - a[1]).slice(0, 12) };
+}
+function bars(list, color, max, click) {
+  if (!list.length) return '<div class="empty" style="padding:10px">Sin datos</div>';
+  const top = list[0].c;
+  return list.slice(0, max).map(o => `<div class="bar"${click ? ` onclick="findTag('${esc(o.k)}')"` : ''}><div class="l"><span>${esc(o.k)}</span><span>${o.c}${o.p ? ` · <span class="dan">${o.p} pend.</span>` : ''}</span></div>
+    <div class="b"><i style="width:${Math.max(4, Math.round(o.c / top * 100))}%;background:${color}"></i></div></div>`).join('');
+}
+function vStats() {
+  if (!S.statsCat || !cat(S.statsCat)) S.statsCat = defStatsCat();
+  if (!S.statsCat) return `<div class="top"><button class="ib" onclick="history.back()" aria-label="Volver"><i class="ti ti-arrow-left"></i></button><h1>Estadísticas</h1></div><div class="empty">Crea una categoría primero.</div>`;
+  const d = statsData(), k = catColor(S.statsCat) || 'var(--ac)';
+  return `<div class="top"><button class="ib" onclick="history.back()" aria-label="Volver"><i class="ti ti-arrow-left"></i></button><h1>Estadísticas</h1></div>
+    <button class="catsel" onclick="statsPick()"><i class="ti ti-folder" style="color:${catColor(S.statsCat)}"></i><span>${esc(path(S.statsCat))}</span><i class="ti ti-chevron-down"></i></button>
+    <div class="chp">${[[30, '30 días'], [90, '90 días'], [365, '1 año'], [0, 'Todo']].map(([v, t]) => `<button class="${S.statsDays === v ? 'on' : ''}" onclick="S.statsDays=${v};render()">${t}</button>`).join('')}</div>
+    <div class="kp"><div><b>${d.notes}</b>notas</div><div><b>${d.E.length}</b>con TAG</div><div><b class="${d.pend ? 'dan' : ''}">${d.pend}</b>pendientes</div></div>
+    ${d.E.length ? `<div class="sec">TAGs más repetidos · toca uno para ver sus notas</div>${bars(d.tags, k, 10, true)}
+    <div class="sec">Por variable</div>${bars(d.vars, '#d85a30', 8)}
+    <div class="sec">Por tipo</div>${bars(d.tipos, '#7f77dd', 8)}
+    <div class="sec">Por área</div>${bars(d.areas, '#1d9e75', 6)}
+    ${d.words.length ? `<div class="sec">Acciones más frecuentes</div><div class="words">${d.words.map(([w, c]) => `<span>${esc(w)} <b>${c}</b></span>`).join('')}</div>` : ''}`
+    : '<div class="empty">No hay ítems que empiecen con un TAG en este periodo.<br>Ejemplo: <b>241TCV403: Revisar recorrido</b></div>'}
+    <div class="sec">Hoja de cálculo</div>
+    <div class="row" onclick="statsSheet()"><i class="ti ti-table ic" style="color:#3b6d11"></i><span class="nm">Actualizar hoja de cálculo</span><i class="ti ti-refresh n"></i></div>
+    <div id="sslink"></div>`;
+}
+function statsPick() {
+  const t = (pid, l) => kids(pid).map(c => `<div class="row${S.statsCat === c.id ? ' sel' : ''}" style="padding-left:${8 + l * 20}px" onclick="closeSheet();S.statsCat='${c.id}';render()">${fic(c.id)}<span class="nm">${esc(c.name)}</span><span class="n">${countDeep(c.id)}</span></div>` + t(c.id, l + 1)).join('');
+  sheet(`<h3>Analizar carpeta</h3>${t(null, 0)}`);
+}
+function findTag(tag) { S.q = tag; go({ v: 'home' }); }
+async function statsSheet() {
+  const box = $('#sslink');
+  box.innerHTML = '<div class="load" style="padding:14px"><i class="ti ti-loader-2 spin"></i> Actualizando hoja…</div>';
+  try {
+    const r = await api('buildStatsSheet', S.statsCat);
+    box.innerHTML = `<a class="row" href="${esc(r.url)}" target="_blank" rel="noopener"><i class="ti ti-external-link ic" style="color:#3b6d11"></i><span class="nm">Abrir hoja (${r.rows} filas)</span></a>`;
+  } catch (e) { box.innerHTML = ''; toast('No se pudo actualizar la hoja: ' + errMsg(e), 4500); }
+}
+
+// ── selección múltiple ──
+function cardTap(id) { if (!S.sel) return openNote(id); S.sel.has(id) ? S.sel.delete(id) : S.sel.add(id); if (!S.sel.size) S.sel = null; keepScroll(render); }
+function selStart(id) { S.sel = S.sel || new Set(); if (id) S.sel.add(id); keepScroll(render); if (id) toast('Toca otras notas para agregarlas'); }
+function keepScroll(fn) { const y = window.scrollY; fn(); window.scrollTo(0, y); }
+function selBar() {
+  const n = S.sel.size, allPin = n && [...S.sel].every(id => (S.notes.find(x => x.id === id) || {}).pinned);
+  return `<div class="selbar"><div><button class="ib" onclick="S.sel=null;keepScroll(render)" aria-label="Cancelar selección"><i class="ti ti-x"></i></button>
+    <span class="lb">${n} seleccionada${n === 1 ? '' : 's'}</span>
+    <button class="ib" onclick="selMove()" aria-label="Mover a otra carpeta"><i class="ti ti-folder-share"></i></button>
+    <button class="ib${allPin ? ' on' : ''}" onclick="selPin(${!allPin})" aria-label="${allPin ? 'Desfijar' : 'Fijar'}"><i class="ti ti-pin"></i></button>
+    <button class="ib" onclick="selDel()" aria-label="Borrar notas"><i class="ti ti-trash"></i></button></div></div>`;
+}
+function selMove() {
+  if (!S.sel || !S.sel.size) return toast('Marca al menos una nota');
+  const t = (pid, l) => kids(pid).map(c => `<div class="row" style="padding-left:${8 + l * 20}px" onclick="selMoveTo('${c.id}')">${fic(c.id)}<span class="nm">${esc(c.name)}</span></div>` + t(c.id, l + 1)).join('');
+  sheet(`<h3>Mover ${S.sel.size} nota${S.sel.size === 1 ? '' : 's'} a…</h3>${t(null, 0)}`);
+}
+async function selBulk(changes, msg) {
+  const ids = [...S.sel];
+  try {
+    const out = await api('bulkUpdate', ids, changes);
+    out.forEach(upsert); S.sel = null; keepScroll(render); toast(msg);
+  } catch (e) { toast('No se pudo: ' + errMsg(e), 4000); }
+}
+function selMoveTo(id) { closeSheet(); selBulk({ cat: id }, 'Movidas a ' + path(id)); }
+function selPin(v) { if (!S.sel || !S.sel.size) return toast('Marca al menos una nota'); selBulk({ pinned: v }, v ? 'Notas fijadas' : 'Notas desfijadas'); }
+async function selDel() {
+  if (!S.sel || !S.sel.size) return toast('Marca al menos una nota');
+  const ids = [...S.sel];
+  if (!(await confirmar('¿Borrar ' + ids.length + ' nota' + (ids.length === 1 ? '' : 's') + '?', 'Se borran también sus fotos y recordatorios.', 'Borrar'))) return;
+  try { await api('deleteNotes', ids); S.notes = S.notes.filter(n => !ids.includes(n.id)); S.sel = null; keepScroll(render); toast('Notas borradas'); }
+  catch (e) { toast('No se pudo borrar: ' + errMsg(e), 4000); }
+}
+
+// ── nota ──
+function newNote(catId) {
+  const c = (catId && cat(catId)) ? catId : (S.lastCat && cat(S.lastCat)) ? S.lastCat : (kids(null)[0] || {}).id;
+  const now = new Date().toISOString();
+  S.edit = { id: uid(), title: '', text: '', items: [], photos: [], cat: c, pinned: false, reminder: null, created: now, updated: now };
+  go({ v: 'note' });
+  setTimeout(() => { const t = $('#ti'); if (t) t.focus(); }, 60);
+}
+function openNote(id) {
+  const n = S.notes.find(x => x.id === id);
+  if (!n) return;
+  S.edit = JSON.parse(JSON.stringify(n));
+  go({ v: 'note' });
+  loadPhotos();
+}
+function vNote() {
+  const n = S.edit;
+  return `<div class="top"><button class="ib" onclick="history.back()" aria-label="Volver"><i class="ti ti-arrow-left"></i></button><span id="st" class="st"></span><span style="flex:1"></span>
+    <button id="pinb" class="ib${n.pinned ? ' on' : ''}" onclick="togglePin()" aria-label="Fijar"><i class="ti ti-pin"></i></button>
+    <button class="ib" onclick="delNote()" aria-label="Borrar nota"><i class="ti ti-trash"></i></button></div>
+    <button class="catsel" onclick="pickCat()"><i id="cfi" class="ti ti-folder" style="${catColor(n.cat) ? 'color:' + catColor(n.cat) : ''}"></i><span id="cpath">${esc(path(n.cat))}</span><i class="ti ti-chevron-down"></i></button>
+    <input id="ti" class="tin" placeholder="Título" value="${esc(n.title)}" oninput="S.edit.title=this.value;changed()">
+    <textarea id="tx" class="txa" rows="1" placeholder="Escribe aquí…" oninput="S.edit.text=this.value;grow(this);changed()">${esc(n.text)}</textarea>
+    <div id="items">${itemsHtml()}</div>
+    <div id="ph" class="phs">${photosHtml()}</div>
+    <div id="rm">${remHtml()}</div>
+    <div class="meta" style="margin:14px 4px">Creada ${fmtDate(n.created)}${n.updated && n.updated !== n.created ? ' · editada ' + fmtDate(n.updated) : ''}</div>
+    <div class="tbar">
+      <div class="shr"><span class="lb"><i class="ti ti-share"></i>Compartir PDF</span>
+        <button class="ib wa" onclick="sharePdf('wa')" aria-label="Enviar PDF por WhatsApp"><i class="ti ti-brand-whatsapp"></i></button>
+        <button class="ib ml" onclick="mailSheet()" aria-label="Enviar PDF por correo"><i class="ti ti-mail"></i></button>
+        <button class="ib" onclick="sharePdf('dl')" aria-label="Descargar PDF"><i class="ti ti-download"></i></button></div>
+      <div class="tools">
+      <button class="ib" onclick="dictar()" aria-label="Dictar"><i class="ti ti-microphone"></i></button>
+      <button class="ib" onclick="$('#file').click()" aria-label="Foto"><i class="ti ti-camera"></i></button>
+      <button class="ib" onclick="addItem()" aria-label="Agregar lista"><i class="ti ti-list-check"></i></button>
+      <button class="ib" onclick="remSheet()" aria-label="Recordatorio"><i class="ti ti-bell"></i></button></div></div>
+    <input id="file" type="file" accept="image/\x2a" multiple style="display:none" onchange="addPhotos(this.files);this.value=''">`;
+}
+function grow(t) { if (!t) return; t.style.height = 'auto'; t.style.height = (t.scrollHeight + 4) + 'px'; }
+function togglePin() { S.edit.pinned = !S.edit.pinned; $('#pinb').classList.toggle('on', S.edit.pinned); changed(); toast(S.edit.pinned ? 'Nota fijada arriba' : 'Nota desfijada'); }
+
+function itemsHtml() {
+  const it = S.edit.items || [];
+  if (!it.length) return '';
+  const k = catColor(S.edit.cat) || 'var(--bd2)';
+  return it.map((x, i) => `<div class="item${x.ok ? ' ok' : ''}"><button class="ck" onclick="tick(${i})" aria-label="Marcar"><i class="ti ti-${x.ok ? 'square-check' : 'square'}"></i></button>
+    <textarea class="itx" rows="1" placeholder="Ítem" oninput="if(this.value.indexOf(String.fromCharCode(10))>=0)this.value=this.value.split(String.fromCharCode(10)).join(' ');S.edit.items[${i}].t=this.value;grow(this);changed()" onkeydown="if(event.key==='Enter'){event.preventDefault();addItem(${i + 1})}">${esc(x.t)}</textarea>
+    <button class="ib sm" onclick="rmItem(${i})" aria-label="Quitar ítem"><i class="ti ti-x"></i></button></div>` +
+    (x.c != null
+      ? `<textarea class="icom" rows="1" data-i="${i}" style="border-left-color:${k}" placeholder="Comentario: qué se hizo, en qué quedó…" oninput="S.edit.items[${i}].c=this.value;grow(this);changed()" onblur="comBlur(${i})">${esc(x.c)}</textarea>`
+      : `<button class="addc" onclick="addCom(${i})"><i class="ti ti-plus"></i>Agregar comentario</button>`)).join('') +
+    '<div class="row acc sm" onclick="addItem()"><i class="ti ti-plus ic"></i><span class="nm">Agregar ítem</span></div>';
+}
+function rItems() { $('#items').innerHTML = itemsHtml(); document.querySelectorAll('#items .icom, #items .itx').forEach(grow); }
+function addCom(i) { S.edit.items[i].c = ''; rItems(); const t = document.querySelector(`#items .icom[data-i="${i}"]`); if (t) t.focus(); }
+function comBlur(i) { const x = S.edit && S.edit.items[i]; if (x && x.c != null && !String(x.c).trim()) { delete x.c; rItems(); changed(); } }
+function tick(i) { S.edit.items[i].ok = !S.edit.items[i].ok; rItems(); changed(); }
+function addItem(at) {
+  S.edit.items = S.edit.items || [];
+  const i = at == null ? S.edit.items.length : at;
+  S.edit.items.splice(i, 0, { t: '', ok: false });
+  rItems(); changed();
+  const ins = document.querySelectorAll('#items .item .itx'); if (ins[i]) ins[i].focus();
+}
+function rmItem(i) { S.edit.items.splice(i, 1); rItems(); changed(); }
+
+function photosHtml() {
+  return (S.edit.photos || []).map(id => `<div class="pt" onclick="viewPhoto('${id}')">${S.photo[id] ? `<img src="${S.photo[id]}" alt="Foto">` : '<i class="ti ti-photo"></i>'}</div>`).join('') +
+    (S.uploading ? '<div class="pt"><i class="ti ti-loader-2 spin"></i></div>' : '');
+}
+function rPhotos() { const e = $('#ph'); if (e && S.edit) e.innerHTML = photosHtml(); }
+function loadPhotos() {
+  (S.edit.photos || []).forEach(id => { if (!S.photo[id]) api('getPhoto', id).then(d => { S.photo[id] = d; rPhotos(); }).catch(() => {}); });
+}
+async function addPhotos(files) {
+  const ed = S.edit;
+  for (const f of Array.from(files)) {
+    S.uploading++; rPhotos();
+    try {
+      const d = await resize(f), id = await api('uploadPhoto', d);
+      S.photo[id] = d; ed.photos = (ed.photos || []).concat(id);
+      if (S.edit === ed) changed(); else { Q.set(ed.id, ed); flush(); }
+    } catch (e) { toast('No se pudo subir la foto: ' + errMsg(e), 3500); }
+    S.uploading--; rPhotos();
+  }
+}
+function resize(file) {
+  return new Promise((res, rej) => {
+    const img = new Image(), u = URL.createObjectURL(file);
+    img.onload = () => {
+      const s = Math.min(1, 1600 / Math.max(img.width, img.height)), c = document.createElement('canvas');
+      c.width = Math.round(img.width * s); c.height = Math.round(img.height * s);
+      c.getContext('2d').drawImage(img, 0, 0, c.width, c.height);
+      URL.revokeObjectURL(u); res(c.toDataURL('image/jpeg', 0.82));
+    };
+    img.onerror = () => rej(new Error('imagen no válida'));
+    img.src = u;
+  });
+}
+function viewPhoto(id) {
+  sheet(`${S.photo[id] ? `<img class="photo-big" src="${S.photo[id]}" alt="Foto">` : '<div class="load"><i class="ti ti-loader-2 spin"></i> Cargando…</div>'}
+    <div class="acts"><button class="btn dan" onclick="rmPhoto('${id}')"><i class="ti ti-trash"></i>Quitar foto</button><span style="flex:1"></span><button class="btn" onclick="closeSheet()">Cerrar</button></div>`);
+}
+async function rmPhoto(id) {
+  closeSheet();
+  if (!(await confirmar('¿Quitar esta foto?', 'Se enviará a la papelera de Drive.', 'Quitar'))) return;
+  S.edit.photos = S.edit.photos.filter(x => x !== id); rPhotos(); changed();
+}
+
+function remHtml() {
+  const r = S.edit.reminder;
+  if (!r) return '';
+  const past = new Date(r) < new Date();
+  return `<div class="remrow${past ? ' past' : ''}" onclick="remSheet()"><i class="ti ti-bell"></i><div><div>${past ? 'Recordatorio vencido' : 'Recordarme'}</div><div class="sub">${fmtRem(r)}</div></div>
+    <button class="ib sm" onclick="event.stopPropagation();setRem(null)" aria-label="Quitar recordatorio"><i class="ti ti-x"></i></button></div>`;
+}
+function setRem(iso) { S.edit.reminder = iso; $('#rm').innerHTML = remHtml(); changed(); if (iso) toast('Recordatorio: ' + fmtRem(iso)); }
+const toLocal = d => d.getFullYear() + '-' + p2(d.getMonth() + 1) + '-' + p2(d.getDate()) + 'T' + p2(d.getHours()) + ':' + p2(d.getMinutes());
+const QUICK = [
+  ['En 1 hora', () => { const d = new Date(); d.setMinutes(d.getMinutes() + 60, 0, 0); return d; }],
+  ['Mañana 08:00', () => { const d = new Date(); d.setDate(d.getDate() + 1); d.setHours(8, 0, 0, 0); return d; }],
+  ['Lunes 08:00', () => { const d = new Date(); d.setDate(d.getDate() + (((1 - d.getDay() + 7) % 7) || 7)); d.setHours(8, 0, 0, 0); return d; }]
+];
+function remSheet() {
+  const cur = S.edit.reminder ? new Date(S.edit.reminder) : QUICK[1][1]();
+  sheet(`<h3>Recordatorio</h3><div class="chips">${QUICK.map((x, i) => `<button class="btn" onclick="closeSheet();setRem(QUICK[${i}][1]().toISOString())">${x[0]}</button>`).join('')}</div>
+    <label class="lbl" for="rdt">Otra fecha y hora</label><input id="rdt" type="datetime-local" class="inp" value="${toLocal(cur)}">
+    <div class="acts">${S.edit.reminder ? '<button class="btn dan" onclick="closeSheet();setRem(null)">Quitar</button>' : ''}<span style="flex:1"></span>
+      <button class="btn" onclick="closeSheet()">Cancelar</button><button class="btn pri" onclick="remOk()">Guardar</button></div>
+    <p class="hint">Te llegará un aviso de Google Calendar en el celular.</p>`);
+}
+function remOk() { const v = $('#rdt').value; if (!v) return toast('Elige fecha y hora'); closeSheet(); setRem(new Date(v).toISOString()); }
+
+function pickCat() {
+  sheet(`<h3>Guardar en…</h3><div id="pk">${pkTree(null, 0)}</div>
+    <div class="row acc" onclick="pkNew(null)"><i class="ti ti-folder-plus ic"></i><span class="nm">Nueva categoría principal</span></div>`);
+}
+function pkTree(pid, l) {
+  return kids(pid).map(c => `<div class="row${S.edit.cat === c.id ? ' sel' : ''}" style="padding-left:${8 + l * 20}px" onclick="setCat('${c.id}')">
+    ${fic(c.id)}<span class="nm">${esc(c.name)}</span>${S.edit.cat === c.id ? '<i class="ti ti-check"></i>' : ''}
+    <button class="ib sm" onclick="event.stopPropagation();pkNew('${c.id}')" aria-label="Crear subcategoría"><i class="ti ti-folder-plus"></i></button></div>` + pkTree(c.id, l + 1)).join('');
+}
+function setCat(id) { S.edit.cat = id; S.lastCat = id; remember(); closeSheet(); $('#cpath').textContent = path(id); $('#cfi').style.color = catColor(id); rItems(); changed(); }
+async function pkNew(pid) { const c = await createCatFlow(pid); if (c) setCat(c.id); else pickCat(); }
+
+async function delNote() {
+  const ed = S.edit;
+  if (!(await confirmar('¿Borrar esta nota?', 'Se borra la nota, sus fotos y su recordatorio.', 'Borrar'))) return;
+  Q.delete(ed.id);
+  const saved = S.notes.some(n => n.id === ed.id);
+  S.notes = S.notes.filter(n => n.id !== ed.id);
+  S.edit = null; history.back();
+  if (saved) api('deleteNote', ed.id).then(() => toast('Nota borrada')).catch(e => toast('No se pudo borrar en Drive: ' + errMsg(e), 4000));
+}
+
+function dictar() {
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  const tip = () => { toast('Usa el micrófono del teclado del celular para dictar', 4500); const t = $('#tx'); if (t) t.focus(); };
+  if (!SR) return tip();
+  try {
+    const r = new SR(); r.lang = 'es-CL'; r.interimResults = false;
+    r.onstart = () => toast('Escuchando… habla ahora', 6000);
+    r.onerror = tip;
+    r.onresult = e => {
+      const t = Array.from(e.results).map(x => x[0].transcript).join(' '), ta = $('#tx');
+      if (!ta || !S.edit) return;
+      S.edit.text = (S.edit.text ? S.edit.text.replace(/\s*$/, ' ') : '') + t;
+      ta.value = S.edit.text; grow(ta); changed();
+    };
+    r.start();
+  } catch (e) { tip(); }
+}
+
+// ── compartir PDF ──
+const hasContent = n => !isEmpty(Object.assign({}, n, { reminder: null }));
+const PDF = { key: '', file: null };
+async function getPdfFile() {
+  const n = clean(S.edit), key = JSON.stringify(n);
+  if (PDF.key === key && PDF.file) return PDF.file;
+  const d = await api('getPdf', n);
+  const bin = atob(d.b64), u8 = new Uint8Array(bin.length);
+  for (let i = 0; i < bin.length; i++) u8[i] = bin.charCodeAt(i);
+  PDF.key = key; PDF.file = new File([u8], d.name, { type: 'application/pdf' });
+  return PDF.file;
+}
+function busySheet(t) { sheet(`<div class="load" style="padding:30px 0"><i class="ti ti-loader-2 spin"></i> ${esc(t)}</div>`); }
+async function sharePdf(mode) {
+  if (!hasContent(S.edit)) return toast('La nota está vacía');
+  busySheet('Generando PDF…');
+  let f;
+  try { f = await getPdfFile(); } catch (e) { closeSheet(); return toast('No se pudo generar el PDF: ' + errMsg(e), 4000); }
+  // El navegador exige un toque nuevo para compartir/descargar, por eso se muestra un botón.
+  sheet(`<h3>${esc(f.name)}</h3><p>PDF listo (${Math.max(1, Math.round(f.size / 1024))} KB).</p>
+    <div class="acts">${mode === 'wa'
+      ? '<button class="btn pri" style="flex:1;justify-content:center;background:#1d9e75;border-color:#1d9e75" onclick="waGo()"><i class="ti ti-brand-whatsapp"></i>Enviar por WhatsApp</button>'
+      : '<button class="btn pri" style="flex:1;justify-content:center" onclick="closeSheet();download()"><i class="ti ti-download"></i>Descargar</button>'}</div>`);
+}
+function download() {
+  const f = PDF.file; if (!f) return;
+  const u = URL.createObjectURL(f), a = document.createElement('a');
+  a.href = u; a.download = f.name; a.target = '_self';
+  document.body.appendChild(a); a.click(); a.remove();
+  setTimeout(() => URL.revokeObjectURL(u), 60000);
+  toast('PDF descargado');
+}
+async function waGo() {
+  const f = PDF.file; if (!f) return;
+  try {
+    if (navigator.canShare && navigator.canShare({ files: [f] })) {
+      await navigator.share({ files: [f], title: f.name });
+      closeSheet(); return;
+    }
+  } catch (e) { if (e && e.name === 'AbortError') { closeSheet(); return; } }
+  // El celular no permitió compartir directo: se descarga y se abre WhatsApp para adjuntarlo.
+  download();
+  sheet(`<h3>PDF descargado</h3><p>Abre WhatsApp, elige el chat y adjunta el PDF con el clip (📎 › Documento). Está en Descargas.</p>
+    <div class="acts"><button class="btn" onclick="closeSheet()">Cerrar</button><span style="flex:1"></span>
+    <a class="btn pri" style="text-decoration:none;background:#1d9e75;border-color:#1d9e75" href="https:\/\/wa.me/" target="_blank" rel="noopener" onclick="closeSheet()"><i class="ti ti-brand-whatsapp"></i>Abrir WhatsApp</a></div>`);
+}
+function mailSheet() {
+  if (!hasContent(S.edit)) return toast('La nota está vacía');
+  let last = ''; try { last = localStorage.getItem('bn_mail') || ''; } catch (e) {}
+  sheet(`<h3>Enviar PDF por correo</h3><label class="lbl" for="mto">Para</label>
+    <input id="mto" class="inp" type="email" inputmode="email" autocomplete="email" placeholder="nombre@arauco.com" value="${esc(last)}" onkeydown="if(event.key==='Enter')mailGo()">
+    <div class="acts"><span style="flex:1"></span><button class="btn" onclick="closeSheet()">Cancelar</button><button class="btn pri" onclick="mailGo()"><i class="ti ti-send"></i>Enviar</button></div>
+    <p class="hint">Se envía desde tu Gmail con el PDF adjunto.</p>`);
+  setTimeout(() => { const i = $('#mto'); if (i && !i.value) i.focus(); }, 60);
+}
+async function mailGo() {
+  const to = $('#mto').value.trim();
+  if (!/^[^@\s,;]+@[^@\s,;]+\.[^@\s,;]+$/.test(to)) return toast('Revisa el correo');
+  try { localStorage.setItem('bn_mail', to); } catch (e) {}
+  busySheet('Enviando…');
+  try { await api('mailPdf', clean(S.edit), to); closeSheet(); toast('PDF enviado a ' + to, 3500); }
+  catch (e) { closeSheet(); toast('No se pudo enviar: ' + errMsg(e), 4500); }
+}
+
+// ── guardado automático ──
+const Q = new Map(); let tmr = null, busy = false, lastErr = false;
+const isEmpty = n => !String(n.title || '').trim() && !String(n.text || '').trim() && !(n.items || []).some(i => String(i.t).trim()) && !(n.photos || []).length && !n.reminder;
+const clean = n => ({ id: n.id, title: n.title, text: n.text, items: n.items, cat: n.cat, pinned: n.pinned, photos: n.photos, reminder: n.reminder });
+function changed() { Q.set(S.edit.id, S.edit); status(); clearTimeout(tmr); tmr = setTimeout(flush, 1500); }
+function upsert(n) { const i = S.notes.findIndex(x => x.id === n.id); if (i >= 0) S.notes[i] = n; else S.notes.push(n); }
+async function flush() {
+  clearTimeout(tmr); tmr = null;
+  if (busy) { tmr = setTimeout(flush, 600); return; }
+  const ed = Q.values().next().value;
+  if (!ed) return;
+  Q.delete(ed.id);
+  if (isEmpty(ed) && !S.notes.some(n => n.id === ed.id)) return flush();
+  busy = true; status();
+  try {
+    const n = await api('saveNote', clean(ed));
+    upsert(n); ed.fileId = n.fileId; ed.eventId = n.eventId; ed.updated = n.updated; lastErr = false;
+  } catch (e) {
+    if (!Q.has(ed.id)) Q.set(ed.id, ed);
+    busy = false; lastErr = true; status();
+    toast('No se pudo guardar (' + errMsg(e) + '). Reintento en 5 s', 4000);
+    tmr = setTimeout(flush, 5000); return;
+  }
+  busy = false; status();
+  if (Q.size && !tmr) tmr = setTimeout(flush, 300);
+}
+function status() {
+  const e = $('#st'); if (!e || !S.edit) return;
+  const mine = Q.has(S.edit.id);
+  if (lastErr && mine) { e.className = 'st err'; e.innerHTML = '<i class="ti ti-alert-triangle"></i> Sin guardar'; }
+  else if (busy || mine) { e.className = 'st'; e.innerHTML = '<i class="ti ti-loader-2 spin"></i> Guardando…'; }
+  else if (S.notes.some(n => n.id === S.edit.id)) { e.className = 'st ok'; e.innerHTML = '<i class="ti ti-cloud-check"></i> Guardado en Drive'; }
+  else { e.className = 'st'; e.textContent = 'Nota nueva'; }
+}
+function leaveNote() {
+  const ed = S.edit; S.edit = null;
+  if (!ed) return;
+  if (isEmpty(ed) && !S.notes.some(n => n.id === ed.id)) { Q.delete(ed.id); return; }
+  if (Q.has(ed.id)) { upsert(Object.assign({}, ed, { updated: new Date().toISOString() })); flush(); }
+}
+window.addEventListener('beforeunload', e => { if (Q.size) { flush(); e.preventDefault(); e.returnValue = ''; } });
+
+// ── hojas (diálogos) ──
+function sheet(html) {
+  closeSheet();
+  const o = document.createElement('div');
+  o.className = 'ov'; o.id = 'ov';
+  o.onclick = e => { if (e.target === o) closeSheet(); };
+  o.innerHTML = `<div class="sh">${html}</div>`;
+  document.body.appendChild(o);
+}
+function closeSheet() { const o = $('#ov'); if (o) o.remove(); }
+function ask(title, val, ok) {
+  return new Promise(res => {
+    window._ask = res;
+    sheet(`<h3>${esc(title)}</h3><input id="askv" class="inp" value="${esc(val || '')}" maxlength="80" onkeydown="if(event.key==='Enter')askOk()">
+      <div class="acts"><span style="flex:1"></span><button class="btn" onclick="closeSheet();_ask(null)">Cancelar</button><button class="btn pri" onclick="askOk()">${esc(ok || 'Aceptar')}</button></div>`);
+    setTimeout(() => { const i = $('#askv'); if (i) { i.focus(); i.select(); } }, 60);
+  });
+}
+function askOk() { const v = $('#askv').value.trim(); if (!v) return toast('Escribe un nombre'); closeSheet(); _ask(v); }
+function confirmar(title, text, ok) {
+  return new Promise(res => {
+    window._cf = res;
+    sheet(`<h3>${esc(title)}</h3><p>${esc(text)}</p><div class="acts"><span style="flex:1"></span><button class="btn" onclick="closeSheet();_cf(false)">Cancelar</button><button class="btn pri" onclick="closeSheet();_cf(true)">${esc(ok)}</button></div>`);
+  });
+}
+
+// ── inicio ──
+const VERSION = '1.0';
+function applyData(d) { S.cats = d.cats || []; S.notes = d.notes || []; S.links = d.links || []; }
+function openFromUrl() {
+  try {
+    const id = new URLSearchParams(location.search).get('nota');
+    if (id) { history.replaceState({ d: 0 }, '', location.pathname); if (S.notes.some(n => n.id === id)) openNote(id); }
+  } catch (e) {}
+}
+function init() {
+  if (!window.__mockApi && (!CFG.url || !CFG.key)) { S.view = { v: 'setup' }; render(); return; }
+  let cached = null;
+  try { cached = JSON.parse(localStorage.getItem('nt_cache') || 'null'); } catch (e) {}
+  if (cached && cached.cats) { applyData(cached); render(); openFromUrl(); }
+  else $('#app').innerHTML = '<div class="load"><i class="ti ti-loader-2 spin"></i> Cargando notas…</div>';
+  api('getData').then(d => {
+    applyData(d);
+    if (S.view.v !== 'note') render();
+    if (!cached) openFromUrl();
+  }).catch(e => {
+    if (cached && cached.cats) return toast('Sin conexión: estás viendo la última copia guardada', 4500);
+    $('#app').innerHTML = `<div class="empty">No se pudieron cargar las notas:<br>${esc(errMsg(e))}<br><br><button class="btn" onclick="init()">Reintentar</button> <button class="btn" onclick="S.view={v:'setup'};render()">Revisar conexión</button></div>`;
+  });
+}
+function vSetup() {
+  return `<div class="top"><h1>Notes</h1></div>
+    <div style="text-align:center;margin:8px 0 4px"><img src="icons/icon-192.png" width="84" height="84" alt="" style="border-radius:20px"></div>
+    <p style="color:var(--tx2);line-height:1.5;margin:6px 4px 4px">Conecta la app con tus notas de Google Drive. Se pide una sola vez en este celular.</p>
+    <label class="lbl" for="cu">URL de la API (termina en /exec)</label>
+    <input id="cu" class="inp" inputmode="url" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="https://script.google.com/macros/s/…/exec" value="${esc(CFG.url)}">
+    <label class="lbl" for="ck">Clave</label>
+    <input id="ck" class="inp" type="password" autocomplete="off" autocapitalize="off" spellcheck="false" placeholder="La que te dio crearClave()" onkeydown="if(event.key==='Enter')connect()">
+    <div class="acts"><button id="cbtn" class="btn pri" style="flex:1;justify-content:center" onclick="connect()"><i class="ti ti-plug-connected"></i>Conectar</button></div>
+    <p class="hint">La clave queda guardada solo en este celular. Si la pierdes, ejecuta cambiarClave() en Apps Script y conéctate otra vez.</p>`;
+}
+async function connect() {
+  const url = $('#cu').value.trim(), key = $('#ck').value.trim();
+  if (!/^https:\/\/script\.google\.com\/macros\/s\/[\w-]+\/exec$/.test(url)) return toast('Revisa la URL: debe empezar con https://script.google.com/macros/s/ y terminar en /exec', 4500);
+  if (key.length < 16) return toast('Escribe la clave completa');
+  const prev = { url: CFG.url, key: CFG.key }, btn = $('#cbtn');
+  CFG.url = url; CFG.key = key; btn.innerHTML = '<i class="ti ti-loader-2 spin"></i> Conectando…';
+  try {
+    const d = await api('getData');
+    try { localStorage.setItem('nt_url', url); localStorage.setItem('nt_key', key); } catch (e) {}
+    applyData(d); S.stack = []; S.view = { v: 'home' }; render(); toast('Conectado a tus notas');
+    api('setAppUrl', location.origin + location.pathname).catch(() => {});
+  } catch (e) {
+    CFG.url = prev.url; CFG.key = prev.key;
+    btn.innerHTML = '<i class="ti ti-plug-connected"></i>Conectar';
+    toast('No se pudo conectar: ' + errMsg(e), 5000);
+  }
+}
+function settings() {
+  const u = CFG.url ? CFG.url.replace(/^https:\/\/script\.google\.com\/macros\/s\//, '').slice(0, 10) + '…' : 'vista previa';
+  sheet(`<h3>Ajustes</h3><p>Conectado a la API <b>${esc(u)}</b> · versión ${VERSION}</p>
+    <button class="btn wide" onclick="closeSheet();go({v:'setup'})"><i class="ti ti-plug"></i>Cambiar URL o clave</button>
+    <button class="btn wide" onclick="closeSheet();location.reload()"><i class="ti ti-refresh"></i>Recargar la app</button>
+    <button class="btn wide dan" onclick="disconnect()"><i class="ti ti-logout"></i>Desconectar este celular</button>
+    <p class="hint">Desconectar borra la clave y la copia local de este celular. Tus notas siguen en Drive.</p>`);
+}
+async function disconnect() {
+  closeSheet();
+  if (!(await confirmar('¿Desconectar este celular?', 'Se borran la clave y la copia local. Tus notas siguen en Drive.', 'Desconectar'))) return;
+  try { ['nt_url', 'nt_key', 'nt_cache'].forEach(k => localStorage.removeItem(k)); } catch (e) {}
+  CFG.url = ''; CFG.key = ''; S.cats = []; S.notes = []; S.links = []; S.stack = []; S.view = { v: 'setup' }; render();
+}
+if ('serviceWorker' in navigator && !window.__mockApi) window.addEventListener('load', () => navigator.serviceWorker.register('sw.js').catch(() => {}));
+try { history.replaceState({ d: 0 }, ''); } catch (e) {}
+window.addEventListener('popstate', e => {
+  // Atrás con una hoja abierta o en modo selección: se cierra eso y no se cambia de pantalla.
+  if ($('#ov') || S.sel) { closeSheet(); if (S.sel) { S.sel = null; keepScroll(render); } try { history.pushState({ d: S.stack.length }, ''); } catch (x) {} return; }
+  const d = (e.state && e.state.d) || 0;
+  while (S.stack.length > d) back();
+});
+init();
+</script>
+</body>
+</html>
+

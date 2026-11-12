@@ -52,7 +52,7 @@ button,input,textarea{font:inherit;color:inherit}
 mark{background:var(--mark);color:inherit;border-radius:3px;padding:0 1px}
 .empty{color:var(--tx3);text-align:center;padding:28px 10px;line-height:1.5}
 .crumb{font-size:.85rem;color:var(--ac);margin:-4px 8px 4px}
-.fab{position:fixed;right:18px;bottom:22px;width:66px;height:66px;border-radius:50%;border:0;background:var(--ac);color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.25);cursor:pointer;z-index:10}
+.fab{position:fixed;right:18px;bottom:22px;width:66px;height:66px;border-radius:50%;border:0;background:#7cb342;color:#fff;font-size:2rem;display:flex;align-items:center;justify-content:center;box-shadow:0 3px 10px rgba(0,0,0,.25);cursor:pointer;z-index:10}
 .catsel{display:flex;align-items:center;gap:10px;width:100%;min-height:46px;padding:6px 12px;border-radius:14px;border:1px solid var(--ac);background:var(--acbg);color:var(--ac);font-size:1rem;text-align:left;cursor:pointer}
 .catsel span{flex:1;min-width:0}
 .tin{width:100%;border:0;outline:0;background:none;font-size:1.35rem;font-weight:600;padding:10px 4px 2px}
@@ -827,7 +827,7 @@ function confirmar(title, text, ok) {
 }
 
 // ── inicio ──
-const VERSION = '1.0';
+const VERSION = '1.1';
 function applyData(d) { S.cats = d.cats || []; S.notes = d.notes || []; S.links = d.links || []; }
 function openFromUrl() {
   try {
